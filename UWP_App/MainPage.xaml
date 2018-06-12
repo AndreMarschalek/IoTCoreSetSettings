@@ -1,0 +1,83 @@
+﻿<Page
+    x:Class="cyberh0me.net.IoTCoreSetSettings.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:cyberh0me.net.IoTCoreSetSettings"
+    xmlns:data="using:cyberh0me.net.IoTCoreSetSettings.Data"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <local:IsOnToIsEnabledConverter x:Key="IsOnToIsEnabled"/>
+
+        <CollectionViewSource x:Name="ConfigurationCVS" IsSourceGrouped="True"/>
+
+        <Style TargetType="TextBox" x:Key="Box">
+            <Setter Property="Width" Value="200"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel Orientation="Vertical">
+
+            <ListView x:Name="xListView" ItemsSource="{x:Bind ConfigurationCVS.View}" SelectionMode="None" ShowsScrollingPlaceholders="True">
+                <ListView.GroupStyle>
+                    <GroupStyle >
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate x:DataType="data:GroupInfoList">
+                                <Grid>
+                                    <TextBlock Text="{x:Bind Interface}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="data:Configuration">
+                        <Grid>
+                            <StackPanel Orientation="Vertical">
+
+                                <ToggleSwitch x:Name="DHCP1" OffContent="Use the following IP address settings" OnContent="Obtain IP address settings automatically" IsOn="{x:Bind DHCP1, Mode=TwoWay}"/>
+
+                                <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="IP address"/>
+                                <TextBox x:Name="IPAddress" Style="{StaticResource Box}" IsEnabled="{Binding ElementName=DHCP1, Path=IsOn, Converter={StaticResource IsOnToIsEnabled}}" Text="{x:Bind IPAddress, Mode=TwoWay}"/>
+
+                                <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="Subnet mask"/>
+                                <TextBox x:Name="Subnet" Style="{StaticResource Box}" IsEnabled="{Binding ElementName=DHCP1, Path=IsOn, Converter={StaticResource IsOnToIsEnabled}}" Text="{x:Bind Subnet, Mode=TwoWay}"/>
+
+                                <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="Default gateway"/>
+                                <TextBox x:Name="Gateway" Style="{StaticResource Box}" IsEnabled="{Binding ElementName=DHCP1, Path=IsOn, Converter={StaticResource IsOnToIsEnabled}}" Text="{x:Bind Gateway, Mode=TwoWay}"/>
+
+                                <ToggleSwitch x:Name="DHCP2" OffContent="Use the following DNS server settings" OnContent="Obtain DNS server settings automatically" IsOn="{x:Bind DHCP2, Mode=TwoWay}"/>
+
+                                <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="Preferred DNS server"/>
+                                <TextBox x:Name="DNS1" Style="{StaticResource Box}" IsEnabled="{Binding ElementName=DHCP2, Path=IsOn, Converter={StaticResource IsOnToIsEnabled}}" Text="{x:Bind DNS1, Mode=TwoWay}"/>
+
+                                <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="Alternate DNS server"/>
+                                <TextBox x:Name="DNS2" Style="{StaticResource Box}" IsEnabled="{Binding ElementName=DHCP2, Path=IsOn, Converter={StaticResource IsOnToIsEnabled}}" Text="{x:Bind DNS2, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Margin="10,10,0,0" Text="hostname"/>
+            <TextBox x:Name="hostname" Style="{StaticResource Box}" Margin="75,0,0,0" HorizontalAlignment="Left"/>
+
+            <Frame BorderBrush="LightSlateGray" BorderThickness="0.5" Margin="10"/>
+
+            <Button Width="90" Margin="10,0,0,0" Content="Save" Tapped="ButtonSave_Tapped"/>
+
+            <Frame BorderBrush="LightSlateGray" BorderThickness="0.5" Margin="10"/>
+            
+            <StackPanel x:Name="StatusPanel" Orientation="Vertical" Margin="10,0,10,0">
+                <TextBlock x:Name="StatusLabel" Margin="0,0,0,10" TextWrapping="Wrap" Text="Status:" />
+                <Border x:Name="StatusBorder" Margin="0,0,0,0" Visibility="Collapsed" >
+                    <TextBlock x:Name="StatusBlock" FontWeight="Bold" MaxHeight="200" MinWidth="{Binding ElementName=Splitter, Path=ActualWidth}" TextTrimming="CharacterEllipsis"  Margin="20,10,10,20" TextWrapping="Wrap"/>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

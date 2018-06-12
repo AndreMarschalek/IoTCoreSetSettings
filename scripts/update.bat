@@ -1,0 +1,1 @@
+powershell.exe C:\scripts\update.ps1
